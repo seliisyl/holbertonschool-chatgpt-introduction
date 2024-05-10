@@ -3,20 +3,20 @@ import sys
 
 def factorial(n):
     """
-    Description de la fonction:
-    Calcule le factoriel d'un nombre donné.
+    Calculate the factorial of a given number recursively.
 
-    Paramètres:
-    - n (int): Le nombre dont on veut calculer le factoriel.
+    Parameters:
+    n (int): The number whose factorial is to be calculated.
 
-    Retours:
-    int: Le résultat du calcul du factoriel de n.
+    Returns:
+    int: The factorial of the input number.
     """
     if n == 0:
         return 1
     else:
         return n * factorial(n-1)
 
-# Appel de la fonction factorial avec l'argument passé en ligne de commande
+# Calculate the factorial of the number provided as a command-line argument
 f = factorial(int(sys.argv[1]))
 print(f)
+
