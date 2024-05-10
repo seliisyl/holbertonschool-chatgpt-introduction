@@ -12,6 +12,7 @@ class Minesweeper:
         self.mines = set(random.sample(range(width * height), mines))
         self.field = [[' ' for _ in range(width)] for _ in range(height)]
         self.revealed = [[False for _ in range(width)] for _ in range(height)]
+        self.cells_to_reveal = width * height - mines
 
     def print_board(self, reveal=False):
         clear_screen()
@@ -40,9 +41,12 @@ class Minesweeper:
         return count
 
     def reveal(self, x, y):
+        if self.revealed[y][x]:
+            return True
         if (y * self.width + x) in self.mines:
             return False
         self.revealed[y][x] = True
+        self.cells_to_reveal -= 1
         if self.count_mines_nearby(x, y) == 0:
             for dx in [-1, 0, 1]:
                 for dy in [-1, 0, 1]:
@@ -51,26 +55,22 @@ class Minesweeper:
                         self.reveal(nx, ny)
         return True
 
-    def check_win(self):
-        for y in range(self.height):
-            for x in range(self.width):
-                if not self.revealed[y][x] and (y * self.width + x) not in self.mines:
-                    return False
-        return True
-
     def play(self):
         while True:
             self.print_board()
             try:
                 x = int(input("Enter x coordinate: "))
                 y = int(input("Enter y coordinate: "))
+                if not (0 <= x < self.width and 0 <= y < self.height):
+                    print("Invalid coordinates. Please enter coordinates within the board range.")
+                    continue
                 if not self.reveal(x, y):
                     self.print_board(reveal=True)
                     print("Game Over! You hit a mine.")
                     break
-                if self.check_win():
+                elif self.cells_to_reveal == 0:
                     self.print_board(reveal=True)
-                    print("Congratulations! You won!")
+                    print("Congratulations! You've won the game.")
                     break
             except ValueError:
                 print("Invalid input. Please enter numbers only.")
